@@ -60,14 +60,14 @@ PImage getDifference(PImage input1, PImage input2)
     float GDiff = abs(green(input1.pixels[i]) - green(input2.pixels[i]));
     float BDiff = abs(blue(input1.pixels[i]) - blue(input2.pixels[i]));
     
-    //TODO: create threshold to return no difference if r/g/b diff is below a chosen value
+    threshold to return no difference if r/g/b diff is below chosen value
     if (RDiff+GDiff+BDiff < 3*threshold){
        RDiff = 0;
        GDiff = 0;
        BDiff = 0;
     }
 
-   //TODO: if we can get thresholds working, have independent thresholds & gains to examine certain color channels more closely
+   //TODO: independent thresholds & gains to examine certain color channels more closely
     
     //multiply the colors of difference by gain factor
     color diffColor = color(RDiff * gain, GDiff * gain, BDiff * gain);
