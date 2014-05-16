@@ -31,11 +31,15 @@ void setup()
   inputImg1 = loadImage("inputImg1.png");
   inputImg2 = loadImage("inputImg2.png");
   //currently, program always looks in its data folder for the images.
+
+  // selectInput("Please select your first image:", "fileSelected1");
+  // selectInput("Please select your second image:", "fileSelected2");
   
   //show 2 load buttons that open a file explorer
-  loadImage1 = new GButton(this, 50, 480, 200, 50, "Load Image 1");
-  loadImage2 = new GButton(this, 50, 540, 200, 50, "Load Image 2");
-  save_image = new GButton(this, 50, 600, 200, 50, "Save Image");
+  int button_size = windowWidth/8;
+  loadImage1 = new GButton(this, 10, 480, button_size, 50, "Load Image 1");
+  loadImage2 = new GButton(this, button_size+10, 480, button_size, 50, "Load Image 2");
+  save_image = new GButton(this, 10, 535, button_size*2, 50, "Save Difference Image");
   ready = new GButton(this, 50, 660, 200, 50, "Display Difference");
   recenter = new GButton(this, 300, 660, 200, 50, "Recenter");
   
@@ -44,7 +48,7 @@ void setup()
   grayBox.addEventHandler(this,"handleGray");
    
    //Set up our text area for output
-  details = new GTextField(this, 600, 640, 400, 30, (0x1000 | 0x0002) );
+  details = new GTextField(this, 500, 640, 400, 30, (0x1000 | 0x0002) ); ///////////
   gain_amount = new GTextField(this, 600, 680, 100, 30, (0x1000 | 0x0002) );
   threshold_amount = new GTextField(this, 600, 720, 100, 30, (0x1000 | 0x0002) );
   
@@ -56,20 +60,23 @@ void setup()
 //Executes continuously, is like a repeating main method
 void draw()
 {
-   background(255, 255, 255);
+
+  //frame.setsize(window_width, window_height); //command to change window size of sketch, if resizing is enabled
+  background(255, 255, 255);
   //draw thumbnails of the input images to the left of the window
-  image(inputImg1, 10, 10, windowWidth/4, windowHeight/4);
-  image(inputImg2, 10, 50+windowHeight/4, windowWidth/4, windowHeight/4);
+  text("Image 1:", 10, 25);
+  text("Image 2:", 10, 60+windowHeight/4);
+  image(inputImg1, 10, 32, windowWidth/4, windowHeight/4);
+  image(inputImg2, 10, 67+windowHeight/4, windowWidth/4, windowHeight/4);
   //TODO: fix alignment of windows to make them even, use padding so that images don't get stretched out
 
-  //
   
   //only needs to calculate difference when a parameter is changed, otherwise it's a waste of processing power
     if(changedParameter)//TODO: once GUI is implemented, make changedParamater = true every time a parameter is changed
     {
       
       print("Calculating difference...");
-      details.setText("Calculating difference...");
+      details.setText("Calculating difference...\n");
       textSize(28);
       float time = millis();
       
@@ -377,10 +384,4 @@ void keyPressed(){
     current_x += 1;
   }
 
-}
-
-void resizeWindow(int window_width, int window_height){
-  if (windowWidth != window_width || windowHeight != window_height){
-    frame.setsize(window_width, window_height);
-  }
 }
