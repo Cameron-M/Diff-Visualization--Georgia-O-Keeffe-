@@ -11,6 +11,7 @@ boolean changedParameter = true;
 float diffCounter = 0;
 float diffPercent;
 boolean GRAYSCALE = false;
+GButton loadImage1, loadImage2;
 
 //TODO: add a GUI library such as G4P http://www.lagers.org.uk/g4p/index.html
 //      put in sliders and text boxes like in interface I sketched up
@@ -28,8 +29,8 @@ void setup()
  //currently, program always looks in its data folder for the images.
  
  //show 2 load buttons that open a file explorer
- GButton loadImage1 = new GButton(this, 100, 650, 200, 50, "Load image 1");
- GButton loadImage2 = new GButton(this, 100, 720, 200, 50, "Load image 2");
+ loadImage1 = new GButton(this, 100, 650, 200, 50, "Load image 1");
+ loadImage2 = new GButton(this, 100, 720, 200, 50, "Load image 2");
 }
 
 //Executes continuously, is like a repeating main method
@@ -117,14 +118,33 @@ PImage getDifference(PImage input1, PImage input2)
 
 //GUI button handlers
 
-//load image 1 with file explorer
-public void handleLoad1(GButton loadImage1, GEvent PRESSED)
+public void handleButtonEvents(GButton BUTTON, GEvent PRESSED)
 {
-    
+  if(BUTTON == loadImage1){
+    selectInput("Select an image:", "fileSelected1");
+  } else if(BUTTON == loadImage2){
+    selectInput("Select an image:", "fileSelected2");
+  }
 }
 
-//load image 2
-public void handleLoad2(GButton loadImage2, GEvent PRESSED)
-{
-    
+//Handle our file selection
+//a bit sloppy, but we just want something that works right now
+void fileSelected1(File selection) {
+  if (selection == null) {
+    println("User hit cancel.");
+  } else {
+    println("Selected " + selection.getAbsolutePath());
+    inputImg1 = loadImage(selection.getAbsolutePath());
+    changedParameter = true;
+  }
+}
+
+void fileSelected2(File selection) {
+  if (selection == null) {
+    println("User hit cancel.");
+  } else {
+    println("Selected " + selection.getAbsolutePath());
+    inputImg2 = loadImage(selection.getAbsolutePath());
+    changedParameter = true;
+  }
 }
