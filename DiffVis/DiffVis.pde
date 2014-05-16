@@ -6,7 +6,8 @@ int windowHeight = 800;
 float gain = 1;// multiply by output pixels to exaggerate the differences
 int threshold = 0;
 boolean changedParameter = true;
-
+int diffCounter = 0;
+boolean GRAYSCALE = false;
 //TODO: add a GUI library such as G4P http://www.lagers.org.uk/g4p/index.html
 //put in sliders and text boxes like in interface I sketched up
 
@@ -73,10 +74,24 @@ PImage getDifference(PImage input1, PImage input2)
     color diffColor = color(RDiff * gain, GDiff * gain, BDiff * gain);
     
     //TODO: have option to make output be grayscale, or apply a gradient map, to more precisely see which pixels have more difference than others
+    if(GRAYSCALE){
+      float TempDiff = RDiff+GDiff+BDiff;
+      float GrayDiff = TempDiff/3;
+      RDiff = GrayDiff;
+      GDiff = GrayDiff;
+      BDiff = GrayDiff;
+    }
     
     output.pixels[i] = diffColor;
+    
+    //TODO: quantify the difference with some data, like number of differing pixels in the images
+    //needs button to print diffCounter
+    if(RDiff!=0 || GDiff!=0 || BDiff!=0){
+      diffCounter ++;
+    } 
+    
   }
-  //TODO: quantify the difference with some data, like number of differing pixels in the images
+  
   
   changedParameter = false;//make the program stop calculating difference for now
   return output;
