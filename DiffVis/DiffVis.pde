@@ -193,12 +193,7 @@ public void handleButtonEvents(GButton BUTTON, GEvent PRESSED)
   } else if(BUTTON == ready){
     changedParameter = true;
   } else if(BUTTON == save_image){
-    print("Saving...");
-    details.setText("Saving...");
-    float time = millis();
-    displayImg.save("output.png"); //export the image as output.png
-    println("Saved in "  + (millis()-time)/1000 + " seconds.\n");
-    details.appendText("Saved in "  + (millis()-time)/1000 + " seconds.\n");
+    selectInput("Save your image:", "fileSave");
   } else if(BUTTON == recenter){
     current_x = 0;
     current_y = 0;
@@ -233,6 +228,19 @@ void fileSelected2(File selection) {
     inputImg2 = loadImage(temp);
     println(" Loaded in " + (millis()-time)/1000 + " seconds.\n");
     details.appendText(" Loaded in " + (millis()-time)/1000 + " seconds.\n");
+  }
+}
+
+void fileSave(File selection) {
+  if (selection == null) {
+    println("User hit cancel.");
+  } else {
+    print("Saving...");
+    details.setText("Saving...");
+    float time = millis();
+    displayImg.save(selection.getAbsolutePath()); //export the image as output.png
+    println("Saved in "  + (millis()-time)/1000 + " seconds.\n");
+    details.appendText("Saved in "  + (millis()-time)/1000 + " seconds.\n");
   }
 }
 
