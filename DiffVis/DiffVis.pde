@@ -60,7 +60,7 @@ PImage getDifference(PImage input1, PImage input2)
     float GDiff = abs(green(input1.pixels[i]) - green(input2.pixels[i]));
     float BDiff = abs(blue(input1.pixels[i]) - blue(input2.pixels[i]));
     
-    threshold to return no difference if r/g/b diff is below chosen value
+    //threshold to return no difference if r/g/b diff is below chosen value
     if (RDiff+GDiff+BDiff < 3*threshold){
        RDiff = 0;
        GDiff = 0;
