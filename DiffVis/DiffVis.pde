@@ -53,11 +53,12 @@ void setup()
   
   //show 2 load buttons that open a file explorer
   int button_size = windowWidth/8;
-  loadImage1 = new GButton(this, 10, 480, button_size, 50, "Load Image 1");
-  loadImage2 = new GButton(this, button_size+10, 480, button_size, 50, "Load Image 2");
-  save_image = new GButton(this, 10, 535, button_size*2, 50, "Save Difference Image");
-  ready = new GButton(this, 50, 660, 200, 50, "Display Difference");
-  recenter = new GButton(this, 300, 660, 200, 50, "Recenter");
+  int load_height_pos = 480;
+  loadImage1 = new GButton(this, 10, load_height_pos, button_size, 50, "Select Image 1");
+  loadImage2 = new GButton(this, button_size+10, load_height_pos, button_size, 50, "Select Image 2");
+  ready = new GButton(this, 10, load_height_pos + 55, button_size*2, 50, "Display Difference");
+  save_image = new GButton(this, 10, load_height_pos+(55*2), button_size*2, 50, "Save Difference Image");
+  recenter = new GButton(this, 10, load_height_pos+(55*3), button_size*2, 50, "Reset Position of Difference Image");
   
   //Grayscale 
   grayBox = new GCheckbox(this, 50,720,200,50, "GRAYSCALE");   
