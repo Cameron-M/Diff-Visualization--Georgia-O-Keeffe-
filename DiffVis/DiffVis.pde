@@ -8,7 +8,8 @@ int windowHeight = 800;
 float gain = 1;// multiply by output pixels to exaggerate the differences
 int threshold = 0;
 boolean changedParameter = true;
-int diffCounter = 0;
+float diffCounter = 0;
+float diffPercent;
 boolean GRAYSCALE = false;
 
 //TODO: add a GUI library such as G4P http://www.lagers.org.uk/g4p/index.html
@@ -49,6 +50,14 @@ void draw()
       
   //draw the output in the upper right
   image(outputImg, 20 + windowWidth/4, 10, 3 * windowWidth/4, 3 * windowHeight/4);
+  
+  //prints diffPercent
+  diffPercent = diffCounter/outputImg.pixels.length;
+  diffPercent = diffPercent *100;
+  textSize(28);
+  text("Pixel Difference Percentage: " +diffPercent+"%",600,635);
+  fill(0, 102, 153, 51);
+  
   //TODO: make the output window navigable, with zoom and scrolling
   
 }
