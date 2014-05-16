@@ -11,11 +11,13 @@ boolean changedParameter = true, invoke_change = false;
 float diffCounter = 0;
 float diffPercent;
 boolean GRAYSCALE = false;
-GButton loadImage1, loadImage2, save_image, ready;
+GButton loadImage1, loadImage2, save_image, ready, recenter;
 GCheckbox grayBox;
 GTextField details, gain_amount, threshold_amount;
 HScrollbar gain_bar, threshold_bar;
-float RDiff, GDiff, BDiff;
+float RDiff, GDiff, BDiff, current_zoom = 1;
+int current_x = 0, current_y = 0;
+int previous_mouseX = 0, previous_mouseY = 0;
 
 //Executes once at beginning, like main method
 void setup()
@@ -34,6 +36,7 @@ void setup()
  loadImage2 = new GButton(this, 50, 540, 200, 50, "Load Image 2");
  save_image = new GButton(this, 50, 600, 200, 50, "Save Image");
  ready = new GButton(this, 50, 660, 200, 50, "Display Difference");
+ recenter = new GButton(this, 300, 660, 200, 50, "Recenter");
  
  //Grayscale 
   grayBox = new GCheckbox(this, 50,720,200,50, "GRAYSCALE");
@@ -76,10 +79,16 @@ void draw()
       
       println(" Calculated in " + (millis()-time)/1000 + " seconds.\n");
       details.appendText(" Calculated in " + (millis()-time)/1000 + " seconds.\n");
+      
+      current_x = 0;
+      current_y = 0;
+      current_zoom = 1;
     }
       
   //draw the output in the upper right
-  image(displayImg, 20 + windowWidth/4, 10, 3 * windowWidth/4, 3 * windowHeight/4);
+  //PImage disp_temp = (displayImg.get(current_x, current_y, displayImg.width, displayImg.height));
+  //disp_temp.resize((int)(displayImg.width * current_zoom), (int)(displayImg.height * current_zoom));
+  image(displayImg.get(current_x, current_y, (int)(displayImg.width * current_zoom), (int)(displayImg.height * current_zoom)), 20 + windowWidth/4, 10, 3 * windowWidth/4, 3 * windowHeight/4);
   
   //prints diffPercent
   textSize(28);
@@ -92,13 +101,15 @@ void draw()
   threshold_bar.update();
   threshold_bar.display();
   
-  //Make Gain dynamic
+  //Make Gain and threshold dynamic
   float new_gain = gain_bar.getPos()*0.03;
   int new_threshold = (int)(threshold_bar.getPos()*2.55);
+  //only check if relevent values have changed, makes this less of a memory hog
   if(invoke_change || new_gain != gain || new_threshold != threshold){
     gain = new_gain;
     threshold = new_threshold;
     PImage temp = createImage(outputImg.width, outputImg.height, RGB);
+    //need two versions of for-loops because grayscale affects how we interpret color values
     if(!GRAYSCALE){
        for(int i = 0; i < outputImg.pixels.length; i++){
          float r_value = red(outputImg.pixels[i]);
@@ -188,6 +199,10 @@ public void handleButtonEvents(GButton BUTTON, GEvent PRESSED)
     displayImg.save("output.png"); //export the image as output.png
     println("Saved in "  + (millis()-time)/1000 + " seconds.\n");
     details.appendText("Saved in "  + (millis()-time)/1000 + " seconds.\n");
+  } else if(BUTTON == recenter){
+    current_x = 0;
+    current_y = 0;
+    current_zoom = 1;
   }
 }
 
@@ -308,4 +323,47 @@ class HScrollbar {
     // 0 and the total width of the scrollbar
     return (spos - xpos)/swidth * 100;
   }
+}
+
+//for handling scrolling around images
+void mouseDragged(){
+  
+  if(20 + windowWidth/4 <= mouseX && 10 <= mouseY && 3 * windowWidth/4 >= mouseX && 3 * windowHeight/4 >= mouseY){
+    current_x = current_x - mouseX + previous_mouseX;
+    current_y = current_y - mouseY + previous_mouseY;
+    previous_mouseX = mouseX;
+    previous_mouseY = mouseY;
+  }
+}
+
+void mouseWheel(MouseEvent event) {
+  float e = event.getAmount();
+  if(e < 0){
+    if(current_zoom-0.1 > 0) current_zoom -= 0.1;
+  } else {
+    if(current_zoom+0.1 <= 20) current_zoom += 0.1;
+  }
+}
+
+void mousePressed(){
+  previous_mouseX = mouseX;
+  previous_mouseY = mouseY;
+}
+
+void keyPressed(){
+
+  if(keyCode == 0x6B || keyCode == 0xBB){
+    if(current_zoom+0.1 <= 20) current_zoom += 0.1;
+  } else if(keyCode == 0xBD || keyCode == 0x6D){
+    if(current_zoom-0.1 > 0) current_zoom -= 0.1;
+  } else if(keyCode ==   0x26){
+    current_y += 1;
+  } else if(keyCode ==   0x27){
+    current_x -= 1;
+  } else if(keyCode ==   0x28){
+    current_y -= 1;
+  } else if(keyCode ==   0x25){
+    current_x += 1;
+  }
+
 }
