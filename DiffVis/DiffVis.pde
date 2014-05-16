@@ -53,9 +53,11 @@ void draw()
   //only needs to calculate difference when a parameter is changed, otherwise it's a waste of processing power
     if(changedParameter)//TODO: once GUI is implemented, make changedParamater = true every time a parameter is changed
     {
+      
       print("Calculating difference...");
       details.setText("Calculating difference...");
       textSize(28);
+      float time = millis();
       
       //calculate difference and return it, then draw it in the output window
       outputImg = getDifference(inputImg1, inputImg2);
@@ -65,8 +67,8 @@ void draw()
       diffPercent = diffCounter/outputImg.pixels.length;
       diffPercent = diffPercent *100;
       
-      println(" Calculated.");
-      details.appendText(" Calculated.\n");
+      println(" Calculated in " + (millis()-time)/1000 + " seconds.\n");
+      details.appendText(" Calculated in " + (millis()-time)/1000 + " seconds.\n");
     }
       
   //draw the output in the upper right
