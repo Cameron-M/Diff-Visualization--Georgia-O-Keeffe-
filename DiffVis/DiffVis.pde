@@ -22,34 +22,35 @@ int previous_mouseX = 0, previous_mouseY = 0;
 //Executes once at beginning, like main method
 void setup()
 {
- size(windowWidth, windowHeight);
- background(255, 255, 255);
- frameRate(24);
+  frame.setResizable(true) // Enable dynamic resizing while sketching 
+  size(windowWidth, windowHeight);
+  background(255, 255, 255);
+  frameRate(24);
  
- //TODO: support more file formats.  right now it only accepts png
- inputImg1 = loadImage("inputImg1.png");
- inputImg2 = loadImage("inputImg2.png");
- //currently, program always looks in its data folder for the images.
- 
- //show 2 load buttons that open a file explorer
- loadImage1 = new GButton(this, 50, 480, 200, 50, "Load Image 1");
- loadImage2 = new GButton(this, 50, 540, 200, 50, "Load Image 2");
- save_image = new GButton(this, 50, 600, 200, 50, "Save Image");
- ready = new GButton(this, 50, 660, 200, 50, "Display Difference");
- recenter = new GButton(this, 300, 660, 200, 50, "Recenter");
- 
- //Grayscale 
-  grayBox = new GCheckbox(this, 50,720,200,50, "GRAYSCALE");
-  grayBox.addEventHandler(this,"handleGray");
+  //TODO: support more file formats.  right now it only accepts png
+  inputImg1 = loadImage("inputImg1.png");
+  inputImg2 = loadImage("inputImg2.png");
+  //currently, program always looks in its data folder for the images.
   
-  //Set up our text area for output
- details = new GTextField(this, 600, 640, 400, 30, (0x1000 | 0x0002) );
- gain_amount = new GTextField(this, 600, 680, 100, 30, (0x1000 | 0x0002) );
- threshold_amount = new GTextField(this, 600, 720, 100, 30, (0x1000 | 0x0002) );
- 
- //Set up our scroll bars
- gain_bar = new HScrollbar(700, 700, 300, 16, 1, 800);
- threshold_bar = new HScrollbar(700, 740, 300, 16, 1, 700);
+  //show 2 load buttons that open a file explorer
+  loadImage1 = new GButton(this, 50, 480, 200, 50, "Load Image 1");
+  loadImage2 = new GButton(this, 50, 540, 200, 50, "Load Image 2");
+  save_image = new GButton(this, 50, 600, 200, 50, "Save Image");
+  ready = new GButton(this, 50, 660, 200, 50, "Display Difference");
+  recenter = new GButton(this, 300, 660, 200, 50, "Recenter");
+  
+  //Grayscale 
+  grayBox = new GCheckbox(this, 50,720,200,50, "GRAYSCALE");   
+  grayBox.addEventHandler(this,"handleGray");
+   
+   //Set up our text area for output
+  details = new GTextField(this, 600, 640, 400, 30, (0x1000 | 0x0002) );
+  gain_amount = new GTextField(this, 600, 680, 100, 30, (0x1000 | 0x0002) );
+  threshold_amount = new GTextField(this, 600, 720, 100, 30, (0x1000 | 0x0002) );
+  
+  //Set up our scroll bars
+  gain_bar = new HScrollbar(700, 700, 300, 16, 1, 800);
+  threshold_bar = new HScrollbar(700, 740, 300, 16, 1, 700);
 }
 
 //Executes continuously, is like a repeating main method
@@ -60,6 +61,8 @@ void draw()
   image(inputImg1, 10, 10, windowWidth/4, windowHeight/4);
   image(inputImg2, 10, 50+windowHeight/4, windowWidth/4, windowHeight/4);
   //TODO: fix alignment of windows to make them even, use padding so that images don't get stretched out
+
+  //
   
   //only needs to calculate difference when a parameter is changed, otherwise it's a waste of processing power
     if(changedParameter)//TODO: once GUI is implemented, make changedParamater = true every time a parameter is changed
@@ -374,4 +377,10 @@ void keyPressed(){
     current_x += 1;
   }
 
+}
+
+void resizeWindow(int window_width, int window_height){
+  if (windowWidth != window_width || windowHeight != window_height){
+    frame.setsize(window_width, window_height);
+  }
 }
