@@ -14,8 +14,6 @@ boolean GRAYSCALE = false;
 GButton loadImage1, loadImage2;
 GCheckbox grayBox;
 
-//TODO: add a GUI library such as G4P http://www.lagers.org.uk/g4p/index.html
-//      put in sliders and text boxes like in interface I sketched up
 
 //Executes once at beginning, like main method
 void setup()
@@ -23,7 +21,7 @@ void setup()
  size(windowWidth, windowHeight);
  background(200, 200, 200);
  frameRate(24);
- //TODO: load buttons that open up a file explorer
+ 
  //TODO: support more file formats.  right now it only accepts png
  inputImg1 = loadImage("inputImg1.png");
  inputImg2 = loadImage("inputImg2.png");
@@ -65,7 +63,7 @@ void draw()
   text("Pixel Difference Percentage: " +diffPercent+"%",600,635);
   fill(0, 102, 153, 51);
   
-  //TODO: make the output window navigable, with zoom and scrolling
+  //Since it can export, zoom feature isn't high priority 
   
 }
 
@@ -94,8 +92,7 @@ PImage getDifference(PImage input1, PImage input2)
 
    //TODO: independent thresholds & gains to examine certain color channels more closely
    
-   //TODO: have option to make output be grayscale, or apply a gradient map, to more precisely see which pixels have more difference than others
-   //needs button to switch boolean GRAYSCALE
+   //If checkbox is checked, then GRAYSCALE
    if(GRAYSCALE){
       float TempDiff = RDiff+GDiff+BDiff;
       float GrayDiff = TempDiff/3;
@@ -111,13 +108,12 @@ PImage getDifference(PImage input1, PImage input2)
     
     output.pixels[i] = diffColor;
     
-    //needs button to print diffCounter
+    //Difference pixel counter
     if(RDiff!=0 || GDiff!=0 || BDiff!=0){
       diffCounter ++;
     } 
   }
-  //TODO: quantify the difference with some data, like number of differing pixels in the images
-  
+
   changedParameter = false;//make the program stop calculating difference for now
   return output;
 }
