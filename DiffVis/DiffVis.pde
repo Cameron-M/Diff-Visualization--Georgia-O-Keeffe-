@@ -85,19 +85,21 @@ PImage getDifference(PImage input1, PImage input2)
     }
 
    //TODO: independent thresholds & gains to examine certain color channels more closely
-    
-    //multiply the colors of difference by gain factor
-    color diffColor = color(RDiff * gain, GDiff * gain, BDiff * gain);
-    
-    //TODO: have option to make output be grayscale, or apply a gradient map, to more precisely see which pixels have more difference than others
-    //needs button to switch boolean GRAYSCALE
-    if(GRAYSCALE){
+   
+   //TODO: have option to make output be grayscale, or apply a gradient map, to more precisely see which pixels have more difference than others
+   //needs button to switch boolean GRAYSCALE
+   if(GRAYSCALE){
       float TempDiff = RDiff+GDiff+BDiff;
       float GrayDiff = TempDiff/3;
       RDiff = GrayDiff;
       GDiff = GrayDiff;
       BDiff = GrayDiff;
-    }
+   }
+    
+    //multiply the colors of difference by gain factor
+    color diffColor = color(RDiff * gain, GDiff * gain, BDiff * gain);
+    
+
     
     output.pixels[i] = diffColor;
     
