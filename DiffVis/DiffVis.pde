@@ -74,6 +74,7 @@ PImage getDifference(PImage input1, PImage input2)
     color diffColor = color(RDiff * gain, GDiff * gain, BDiff * gain);
     
     //TODO: have option to make output be grayscale, or apply a gradient map, to more precisely see which pixels have more difference than others
+    //needs button to switch boolean GRAYSCALE
     if(GRAYSCALE){
       float TempDiff = RDiff+GDiff+BDiff;
       float GrayDiff = TempDiff/3;
