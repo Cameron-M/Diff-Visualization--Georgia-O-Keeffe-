@@ -36,6 +36,7 @@ void setup()
 //Executes continuously, is like a repeating main method
 void draw()
 {
+   background(200, 200, 200);
   //draw thumbnails of the input images to the left of the window
   image(inputImg1, 10, 10, windowWidth/4, windowHeight/4);
   image(inputImg2, 10, 50+windowHeight/4, windowWidth/4, windowHeight/4);
@@ -67,6 +68,7 @@ void draw()
 PImage getDifference(PImage input1, PImage input2)
 {
   PImage output = createImage(input1.width, input1.height, RGB);//the output will be the size of the input1 for consistency
+  diffCounter = 0;
   //TODO: program crashes when images sizes are different.
   //try & catch the error (array out of bounds) and notify user.  either attempt to find difference anyway, or refuse to work with that pair
   //if user loads inputs separately, don't diff when only one is loaded.  implement button for when user is ready
