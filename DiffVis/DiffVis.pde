@@ -13,8 +13,8 @@ float diffPercent;
 boolean GRAYSCALE = false;
 GButton loadImage1, loadImage2, ready;
 GCheckbox grayBox;
-GTextField details;
-
+GTextField details, gain_amount;
+HScrollbar hs1, hs2;
 
 //Executes once at beginning, like main method
 void setup()
@@ -39,6 +39,10 @@ void setup()
   
   //Set up our text area for output
  details = new GTextField(this, 600, 740, 400, 30, (0x1000 | 0x0002) );
+ gain_amount = new GTextField(this, 10, 530, 200, 30, (0x1000 | 0x0002) );
+ 
+ //Set up our scroll bars
+ hs1 = new HScrollbar(0, 590, 300, 16, 1, 100);
 }
 
 //Executes continuously, is like a repeating main method
@@ -78,6 +82,13 @@ void draw()
   textSize(28);
   text("Pixel Difference Percentage: " +diffPercent+"%",600,635);
   fill(0, 102, 153, 51);
+  
+  
+  hs1.update();
+  hs1.display();
+  
+  gain = hs1.getPos()/100;
+  gain_amount.setText("Gain: " + gain);
   
   //Since it can export, zoom feature isn't high priority 
   
@@ -184,5 +195,97 @@ public void handleGray(GCheckbox grayBox,GEvent SELECTED){
   }
   if(grayBox.isSelected() == false){
     GRAYSCALE=false;
+  }
+}
+
+//Copying the example on the processing website:
+//http://www.processing.org/examples/scrollbar.html
+class HScrollbar {
+  int swidth, sheight;    // width and height of bar
+  float xpos, ypos;       // x and y position of bar
+  float spos, newspos;    // x position of slider
+  float sposMin, sposMax; // max and min values of slider
+  int loose;              // how loose/heavy
+  boolean over;           // is the mouse over the slider?
+  boolean locked;
+  float ratio;
+
+  HScrollbar (float xp, float yp, int sw, int sh, int l) {
+    swidth = sw;
+    sheight = sh;
+    int widthtoheight = sw - sh;
+    ratio = (float)sw / (float)widthtoheight;
+    xpos = xp;
+    ypos = yp-sheight/2;
+    spos = xpos + swidth/2 - sheight/2;
+    newspos = spos;
+    sposMin = xpos;
+    sposMax = xpos + swidth - sheight;
+    loose = l;
+  }
+  
+  HScrollbar (float xp, float yp, int sw, int sh, int l, float start) {
+    swidth = sw;
+    sheight = sh;
+    int widthtoheight = sw - sh;
+    ratio = (float)sw / (float)widthtoheight;
+    xpos = xp;
+    ypos = yp-sheight/2;
+    spos = start;
+    newspos = spos;
+    sposMin = xpos;
+    sposMax = xpos + swidth - sheight;
+    loose = l;
+  }
+
+  void update() {
+    if (overEvent()) {
+      over = true;
+    } else {
+      over = false;
+    }
+    if (mousePressed && over) {
+      locked = true;
+    }
+    if (!mousePressed) {
+      locked = false;
+    }
+    if (locked) {
+      newspos = constrain(mouseX-sheight/2, sposMin, sposMax);
+    }
+    if (abs(newspos - spos) > 1) {
+      spos = spos + (newspos-spos)/loose;
+    }
+  }
+
+  float constrain(float val, float minv, float maxv) {
+    return min(max(val, minv), maxv);
+  }
+
+  boolean overEvent() {
+    if (mouseX > xpos && mouseX < xpos+swidth &&
+       mouseY > ypos && mouseY < ypos+sheight) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  void display() {
+    noStroke();
+    fill(204);
+    rect(xpos, ypos, swidth, sheight);
+    if (over || locked) {
+      fill(0, 0, 0);
+    } else {
+      fill(102, 102, 102);
+    }
+    rect(spos, ypos, sheight, sheight);
+  }
+
+  float getPos() {
+    // Convert spos to be values between
+    // 0 and the total width of the scrollbar
+    return spos - xpos;
   }
 }
