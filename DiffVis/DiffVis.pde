@@ -2,12 +2,12 @@ import g4p_controls.*;
 
 PImage inputImg1;
 PImage inputImg2;
-PImage outputImg, displayImg, temp;
+PImage outputImg, displayImg;
 int windowWidth = 1200;//TODO: an option to change window size while running would be nice
 int windowHeight = 800;
 float gain = 1;// multiply by output pixels to exaggerate the differences
 int threshold = 0;
-boolean changedParameter = true, invoke_change = false, refresh = true;
+boolean changedParameter = true, invoke_change = false;
 float diffCounter = 0;
 float diffPercent;
 boolean GRAYSCALE = false;
@@ -26,47 +26,58 @@ void setup()
   size(windowWidth, windowHeight);
   background(255, 255, 255);
   frameRate(24);
+ 
+  //TODO: support more file formats.  right now it only accepts png
+  inputImg1 = loadImage("inputImg1.png");
+  inputImg2 = loadImage("inputImg2.png");
+  //currently, program always looks in its data folder for the images.
 
- 
- //TODO: support more file formats.  right now it only accepts png
- inputImg1 = loadImage("inputImg1.png");
- inputImg2 = loadImage("inputImg2.png");
- //currently, program always looks in its data folder for the images.
- 
- int button_size = windowWidth/8;
- int load_height_pos = 480;
- 
- //show 2 load buttons that open a file explorer
- loadImage1 = new GButton(this, 10, load_height_pos, button_size, 50, "Select Image 1");
- loadImage2 = new GButton(this, button_size+10, load_height_pos, button_size, 50, "Select Image 2");
- ready = new GButton(this, 10, load_height_pos + 55, button_size*2, 50, "Display Difference");
- save_image = new GButton(this, 10, load_height_pos + (55*2), button_size*2, 50, "Save Difference Image");
- recenter = new GButton(this, 10, load_height_pos + (55*3), button_size*2, 50, "Reset Position of Difference Image");
- 
- //Grayscale 
-  grayBox = new GCheckbox(this, 50,720,200,50, "GRAYSCALE");
-  grayBox.addEventHandler(this,"handleGray");
+  // selectInput("Please select your first image:", "fileSelected1");
+  // selectInput("Please select your second image:", "fileSelected2");
   
-  //Set up our text area for output
- details = new GTextField(this, 600, 640, 400, 30, (0x1000 | 0x0002) );
- gain_amount = new GTextField(this, 600, 680, 100, 30, (0x1000 | 0x0002) );
- threshold_amount = new GTextField(this, 600, 720, 100, 30, (0x1000 | 0x0002) );
- 
- //Set up our scroll bars
- gain_bar = new HScrollbar(700, 700, 300, 16, 1, 800);
- threshold_bar = new HScrollbar(700, 740, 300, 16, 1, 700);
+  //show 2 load buttons that open a file explorer
+  int button_size = windowWidth/8;
+  int load_height_pos = 480;
+  loadImage1 = new GButton(this, 10, load_height_pos, button_size, 50, "Select Image 1");
+  loadImage2 = new GButton(this, button_size+10, load_height_pos, button_size, 50, "Select Image 2");
+  ready = new GButton(this, 10, load_height_pos + 55, button_size*2, 50, "Display Difference");
+  save_image = new GButton(this, 10, load_height_pos+(55*2), button_size*2, 50, "Save Difference Image");
+  recenter = new GButton(this, 10, load_height_pos+(55*3), button_size*2, 50, "Reset Position of Difference Image");
+  
+  //Grayscale 
+  grayBox = new GCheckbox(this, 50,720,200,50, "GRAYSCALE");   
+  grayBox.addEventHandler(this,"handleGray");
+   
+   //Set up our text area for output
+  details = new GTextField(this, 500, 640, 400, 30, (0x1000 | 0x0002) ); ///////////
+  gain_amount = new GTextField(this, 600, 680, 100, 30, (0x1000 | 0x0002) );
+  threshold_amount = new GTextField(this, 600, 720, 100, 30, (0x1000 | 0x0002) );
+  
+  //Set up our scroll bars
+  gain_bar = new HScrollbar(700, 700, 300, 16, 1, 800);
+  threshold_bar = new HScrollbar(700, 740, 300, 16, 1, 700);
 }
 
 //Executes continuously, is like a repeating main method
 void draw()
 {
+
+  //frame.setsize(window_width, window_height); //command to change window size of sketch, if resizing is enabled
+  background(255, 255, 255);
+  //draw thumbnails of the input images to the left of the window
+  text("Image 1:", 10, 25);
+  text("Image 2:", 10, 60+windowHeight/4);
+  image(inputImg1, 10, 32, windowWidth/4, windowHeight/4);
+  image(inputImg2, 10, 67+windowHeight/4, windowWidth/4, windowHeight/4);
+  //TODO: fix alignment of windows to make them even, use padding so that images don't get stretched out
+
   
   //only needs to calculate difference when a parameter is changed, otherwise it's a waste of processing power
     if(changedParameter)//TODO: once GUI is implemented, make changedParamater = true every time a parameter is changed
     {
       
       print("Calculating difference...");
-      details.setText("Calculating difference...");
+      details.setText("Calculating difference...\n");
       textSize(28);
       float time = millis();
       
@@ -83,29 +94,17 @@ void draw()
       current_x = 0;
       current_y = 0;
       current_zoom = 1;
-      refresh = true;
     }
-    
-   if(refresh){
-     background(255, 255, 255);
-    //draw thumbnails of the input images to the left of the window
-    image(inputImg1, 10, 10, windowWidth/4, windowHeight/4);
-    image(inputImg2, 10, 50+windowHeight/4, windowWidth/4, windowHeight/4);
-    //TODO: fix alignment of windows to make them even, use padding so that images don't get stretched out
-        
-    //draw the output in the upper right
-    //PImage disp_temp = (displayImg.get(current_x, current_y, displayImg.width, displayImg.height));
-    //disp_temp.resize((int)(displayImg.width * current_zoom), (int)(displayImg.height * current_zoom));
-    temp = displayImg.get(current_x, current_y, (int)(displayImg.width * current_zoom), (int)(displayImg.height * current_zoom));
-    image(temp, 20 + windowWidth/4, 10, 3 * windowWidth/4, 3 * windowHeight/4);
-    
-    //prints diffPercent
-    textSize(28);
-    text("Pixel Difference Percentage: " +diffPercent+"%",600,635);
-    fill(0, 102, 153, 51);
-    refresh = false;
-    System.gc();
-   }
+      
+  //draw the output in the upper right
+  //PImage disp_temp = (displayImg.get(current_x, current_y, displayImg.width, displayImg.height));
+  //disp_temp.resize((int)(displayImg.width * current_zoom), (int)(displayImg.height * current_zoom));
+  image(displayImg.get(current_x, current_y, (int)(displayImg.width * current_zoom), (int)(displayImg.height * current_zoom)), 20 + windowWidth/4, 10, 3 * windowWidth/4, 3 * windowHeight/4);
+  
+  //prints diffPercent
+  textSize(28);
+  text("Pixel Difference Percentage: " +diffPercent+"%",600,635);
+  fill(0, 102, 153, 51);
   
   
   gain_bar.update();
@@ -120,7 +119,7 @@ void draw()
   if(invoke_change || new_gain != gain || new_threshold != threshold){
     gain = new_gain;
     threshold = new_threshold;
-    displayImg = createImage(outputImg.width, outputImg.height, RGB);
+    PImage temp = createImage(outputImg.width, outputImg.height, RGB);
     //need two versions of for-loops because grayscale affects how we interpret color values
     if(!GRAYSCALE){
        for(int i = 0; i < outputImg.pixels.length; i++){
@@ -129,32 +128,33 @@ void draw()
          float b_value = blue(outputImg.pixels[i]);
          //threshold to return no difference if r/g/b diff is below chosen value
           if (r_value+g_value+b_value < 3*threshold){
-             displayImg.pixels[i] = color(0,0,0);
+             temp.pixels[i] = color(0,0,0);
           }else{
-           displayImg.pixels[i] = color(r_value * gain, g_value  * gain, b_value  * gain);
+           temp.pixels[i] = color(r_value * gain, g_value  * gain, b_value  * gain);
           }
        }
+       displayImg = temp;
      }else{
       for(int i = 0; i < outputImg.pixels.length; i++){
         float r_value = red(outputImg.pixels[i]);
         float g_value = green(outputImg.pixels[i]);
         float b_value = blue(outputImg.pixels[i]);
         if (r_value+g_value+b_value < 3*threshold){
-             displayImg.pixels[i] = color(0,0,0);
+             temp.pixels[i] = color(0,0,0);
           }else{
             float TempDiff = r_value * gain + g_value  * gain + b_value  * gain;
             float GrayDiff = TempDiff/3;
-            displayImg.pixels[i] = color(GrayDiff, GrayDiff, GrayDiff);
+            temp.pixels[i] = color(GrayDiff, GrayDiff, GrayDiff);
           }
       }
+      displayImg = temp;
      }
      invoke_change = false;
-     refresh = true;
-     
-     gain_amount.setText("Gain: " + gain);
-     threshold_amount.setText("Threshold: " + threshold);
   }
    
+  gain_amount.setText("Gain: " + gain);
+  threshold_amount.setText("Threshold: " + threshold);
+  
   //Since it can export, zoom feature isn't high priority 
   
 }
@@ -162,14 +162,14 @@ void draw()
 //Generates the output difference
 PImage getDifference(PImage input1, PImage input2)
 {
-  temp = createImage(input1.width, input1.height, RGB);//the output will be the size of the input1 for consistency
+  PImage output = createImage(input1.width, input1.height, RGB);//the output will be the size of the input1 for consistency
   diffCounter = 0;
   //TODO: program crashes when images sizes are different.
   //try & catch the error (array out of bounds) and notify user.  either attempt to find difference anyway, or refuse to work with that pair
   //if user loads inputs separately, don't diff when only one is loaded.  implement button for when user is ready
   
   //start manipulating pixels in a for loop for every pixel
-  for (int i = 0; i < temp.pixels.length; i++) {
+  for (int i = 0; i < output.pixels.length; i++) {
     //find difference between one pixel of each image
     RDiff = abs(red(input1.pixels[i]) - red(input2.pixels[i]));
     GDiff = abs(green(input1.pixels[i]) - green(input2.pixels[i]));
@@ -179,7 +179,7 @@ PImage getDifference(PImage input1, PImage input2)
    
     color diffColor = color(RDiff, GDiff, BDiff);
     
-    temp.pixels[i] = diffColor;
+    output.pixels[i] = diffColor;
     
     //Difference pixel counter
     if(RDiff!=0 || GDiff!=0 || BDiff!=0){
@@ -189,7 +189,7 @@ PImage getDifference(PImage input1, PImage input2)
 
   changedParameter = false;//make the program stop calculating difference for now
   invoke_change = true; //account for gain and greyscale
-  return temp;
+  return output;
 }
 
 
@@ -209,7 +209,6 @@ public void handleButtonEvents(GButton BUTTON, GEvent PRESSED)
     current_x = 0;
     current_y = 0;
     current_zoom = 1;
-    refresh = true;
   }
 }
 
@@ -226,7 +225,6 @@ void fileSelected1(File selection) {
     inputImg1 = loadImage(temp);
     println(" Loaded in "  + (millis()-time)/1000 + " seconds.\n");
     details.appendText(" Loaded in " + (millis()-time)/1000 + " seconds.\n");
-    refresh = true;
   }
 }
 
@@ -241,7 +239,6 @@ void fileSelected2(File selection) {
     inputImg2 = loadImage(temp);
     println(" Loaded in " + (millis()-time)/1000 + " seconds.\n");
     details.appendText(" Loaded in " + (millis()-time)/1000 + " seconds.\n");
-    refresh = true;
   }
 }
 
@@ -255,7 +252,6 @@ void fileSave(File selection) {
     displayImg.save(selection.getAbsolutePath()); //export the image as output.png
     println("Saved in "  + (millis()-time)/1000 + " seconds.\n");
     details.appendText("Saved in "  + (millis()-time)/1000 + " seconds.\n");
-    refresh = true;
   }
 }
 
@@ -356,7 +352,6 @@ void mouseDragged(){
     current_y = current_y - mouseY + previous_mouseY;
     previous_mouseX = mouseX;
     previous_mouseY = mouseY;
-    refresh = true;
   }
 }
 
@@ -365,9 +360,8 @@ void mouseWheel(MouseEvent event) {
   if(e < 0){
     if(current_zoom-0.1 > 0) current_zoom -= 0.1;
   } else {
-    if(current_zoom+0.1 <= 1) current_zoom += 0.1;
+    if(current_zoom+0.1 <= 20) current_zoom += 0.1;
   }
-  refresh = true;
 }
 
 void mousePressed(){
@@ -378,25 +372,17 @@ void mousePressed(){
 void keyPressed(){
 
   if(keyCode == 0x6B || keyCode == 0xBB){
-    if(current_zoom+0.1 <= 20) current_zoom += 0.1; refresh = true;
+    if(current_zoom+0.1 <= 20) current_zoom += 0.1;
   } else if(keyCode == 0xBD || keyCode == 0x6D){
-    if(current_zoom-0.1 > 0) current_zoom -= 0.1; refresh = true;
+    if(current_zoom-0.1 > 0) current_zoom -= 0.1;
   } else if(keyCode ==   0x26){
-    current_y += 1; refresh = true;
+    current_y += 1;
   } else if(keyCode ==   0x27){
-    current_x -= 1; refresh = true;
+    current_x -= 1;
   } else if(keyCode ==   0x28){
-    current_y -= 1; refresh = true;
+    current_y -= 1;
   } else if(keyCode ==   0x25){
-    current_x += 1; refresh = true;
+    current_x += 1;
   }
 
 }
-
-void resizeWindow(int window_width, int window_height){
-  if (windowWidth != window_width || windowHeight != window_height){
-    frame.setSize(window_width, window_height);
-  }
-  refresh = true;
-}
-
