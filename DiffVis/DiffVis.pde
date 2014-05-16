@@ -12,6 +12,7 @@ float diffCounter = 0;
 float diffPercent;
 boolean GRAYSCALE = false;
 GButton loadImage1, loadImage2;
+GCheckbox grayBox;
 
 //TODO: add a GUI library such as G4P http://www.lagers.org.uk/g4p/index.html
 //      put in sliders and text boxes like in interface I sketched up
@@ -31,6 +32,10 @@ void setup()
  //show 2 load buttons that open a file explorer
  loadImage1 = new GButton(this, 100, 650, 200, 50, "Load image 1");
  loadImage2 = new GButton(this, 100, 720, 200, 50, "Load image 2");
+ 
+ //Grayscale 
+  grayBox = new GCheckbox(this, 650,650,200,50, "GRAYSCALE");
+  grayBox.addEventHandler(this,"handleGray");
 }
 
 //Executes continuously, is like a repeating main method
@@ -148,5 +153,16 @@ void fileSelected2(File selection) {
     println("Selected " + selection.getAbsolutePath());
     inputImg2 = loadImage(selection.getAbsolutePath());
     changedParameter = true;
+  }
+}
+
+//Grayscale Checkbox handler
+public void handleGray(GCheckbox grayBox,GEvent SELECTED){
+  changedParameter=true;
+  if(grayBox.isSelected() == true){
+    GRAYSCALE=true;
+  }
+  if(grayBox.isSelected() == false){
+    GRAYSCALE=false;
   }
 }
