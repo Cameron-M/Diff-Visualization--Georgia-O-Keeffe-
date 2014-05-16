@@ -1,3 +1,5 @@
+import g4p_controls.*;
+
 PImage inputImg1;
 PImage inputImg2;
 PImage outputImg;
@@ -8,8 +10,9 @@ int threshold = 0;
 boolean changedParameter = true;
 int diffCounter = 0;
 boolean GRAYSCALE = false;
+
 //TODO: add a GUI library such as G4P http://www.lagers.org.uk/g4p/index.html
-//put in sliders and text boxes like in interface I sketched up
+//      put in sliders and text boxes like in interface I sketched up
 
 //Executes once at beginning, like main method
 void setup()
@@ -22,6 +25,10 @@ void setup()
  inputImg1 = loadImage("inputImg1.png");
  inputImg2 = loadImage("inputImg2.png");
  //currently, program always looks in its data folder for the images.
+ 
+ //show 2 load buttons that open a file explorer
+ GButton loadImage1 = new GButton(this, 100, 650, 200, 50, "Load image 1");
+ GButton loadImage2 = new GButton(this, 100, 720, 200, 50, "Load image 2");
 }
 
 //Executes continuously, is like a repeating main method
@@ -34,14 +41,16 @@ void draw()
   
   //only needs to calculate difference when a parameter is changed, otherwise it's a waste of processing power
     if(changedParameter)//TODO: once GUI is implemented, make changedParamater = true every time a parameter is changed
+    {
       //calculate difference and return it, then draw it in the output window
       outputImg = getDifference(inputImg1, inputImg2);
+      outputImg.save("output.png"); //export the image as output.png
+    }
       
-  //draw the output in the upper right    
+  //draw the output in the upper right
   image(outputImg, 20 + windowWidth/4, 10, 3 * windowWidth/4, 3 * windowHeight/4);
   //TODO: make the output window navigable, with zoom and scrolling
   
-  //TODO: have an option to export the output
 }
 
 //Generates the output difference
@@ -51,8 +60,6 @@ PImage getDifference(PImage input1, PImage input2)
   //TODO: program crashes when images sizes are different.
   //try & catch the error (array out of bounds) and notify user.  either attempt to find difference anyway, or refuse to work with that pair
   //if user loads inputs separately, don't diff when only one is loaded.  implement button for when user is ready
-  
-  float pixelColor;
   
   //start manipulating pixels in a for loop for every pixel
   for (int i = 0; i < output.pixels.length; i++) {
@@ -85,15 +92,28 @@ PImage getDifference(PImage input1, PImage input2)
     
     output.pixels[i] = diffColor;
     
-    //TODO: quantify the difference with some data, like number of differing pixels in the images
     //needs button to print diffCounter
     if(RDiff!=0 || GDiff!=0 || BDiff!=0){
       diffCounter ++;
     } 
-    
   }
-  
+  //TODO: quantify the difference with some data, like number of differing pixels in the images
   
   changedParameter = false;//make the program stop calculating difference for now
   return output;
+}
+
+
+//GUI button handlers
+
+//load image 1 with file explorer
+public void handleLoad1(GButton loadImage1, GEvent PRESSED)
+{
+    
+}
+
+//load image 2
+public void handleLoad2(GButton loadImage2, GEvent PRESSED)
+{
+    
 }
