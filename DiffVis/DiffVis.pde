@@ -22,7 +22,7 @@ int previous_mouseX = 0, previous_mouseY = 0;
 //Executes once at beginning, like main method
 void setup()
 {
-  frame.setResizable(true) // Enable dynamic resizing while sketching 
+  frame.setResizable(true); // Enable dynamic resizing while sketching 
   size(windowWidth, windowHeight);
   background(255, 255, 255);
   frameRate(24);
