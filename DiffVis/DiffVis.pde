@@ -11,8 +11,9 @@ boolean changedParameter = true;
 float diffCounter = 0;
 float diffPercent;
 boolean GRAYSCALE = false;
-GButton loadImage1, loadImage2;
+GButton loadImage1, loadImage2, ready;
 GCheckbox grayBox;
+GTextField details;
 
 
 //Executes once at beginning, like main method
@@ -28,12 +29,16 @@ void setup()
  //currently, program always looks in its data folder for the images.
  
  //show 2 load buttons that open a file explorer
- loadImage1 = new GButton(this, 100, 650, 200, 50, "Load image 1");
- loadImage2 = new GButton(this, 100, 720, 200, 50, "Load image 2");
+ loadImage1 = new GButton(this, 100, 620, 200, 50, "Load image 1");
+ loadImage2 = new GButton(this, 100, 680, 200, 50, "Load image 2");
+ ready = new GButton(this, 100, 740, 200, 50, "Ready");
  
  //Grayscale 
   grayBox = new GCheckbox(this, 650,650,200,50, "GRAYSCALE");
   grayBox.addEventHandler(this,"handleGray");
+  
+  //Set up our text area for output
+ details = new GTextField(this, 600, 740, 400, 30, (0x1000 | 0x0002) );
 }
 
 //Executes continuously, is like a repeating main method
@@ -48,17 +53,26 @@ void draw()
   //only needs to calculate difference when a parameter is changed, otherwise it's a waste of processing power
     if(changedParameter)//TODO: once GUI is implemented, make changedParamater = true every time a parameter is changed
     {
+      print("Calculating difference...");
+      details.setText("Calculating difference...");
+      textSize(28);
+      
       //calculate difference and return it, then draw it in the output window
       outputImg = getDifference(inputImg1, inputImg2);
       outputImg.save("output.png"); //export the image as output.png
+      
+      //Change the diff percent after image change
+      diffPercent = diffCounter/outputImg.pixels.length;
+      diffPercent = diffPercent *100;
+      
+      println(" Calculated.");
+      details.appendText(" Calculated.\n");
     }
       
   //draw the output in the upper right
   image(outputImg, 20 + windowWidth/4, 10, 3 * windowWidth/4, 3 * windowHeight/4);
   
   //prints diffPercent
-  diffPercent = diffCounter/outputImg.pixels.length;
-  diffPercent = diffPercent *100;
   textSize(28);
   text("Pixel Difference Percentage: " +diffPercent+"%",600,635);
   fill(0, 102, 153, 51);
@@ -127,6 +141,8 @@ public void handleButtonEvents(GButton BUTTON, GEvent PRESSED)
     selectInput("Select an image:", "fileSelected1");
   } else if(BUTTON == loadImage2){
     selectInput("Select an image:", "fileSelected2");
+  } else if(BUTTON == ready){
+    changedParameter = true;
   }
 }
 
@@ -136,9 +152,12 @@ void fileSelected1(File selection) {
   if (selection == null) {
     println("User hit cancel.");
   } else {
-    println("Selected " + selection.getAbsolutePath());
-    inputImg1 = loadImage(selection.getAbsolutePath());
-    changedParameter = true;
+    String temp = selection.getAbsolutePath();
+    print("Loading " + temp + " ...");
+    details.setText("Loading " + temp + " ...");
+    inputImg1 = loadImage(temp);
+    print(" Loaded.");
+    details.appendText(" Loaded.\n");
   }
 }
 
@@ -146,9 +165,12 @@ void fileSelected2(File selection) {
   if (selection == null) {
     println("User hit cancel.");
   } else {
-    println("Selected " + selection.getAbsolutePath());
-    inputImg2 = loadImage(selection.getAbsolutePath());
-    changedParameter = true;
+    String temp = selection.getAbsolutePath();
+    print("Loading " + temp + " ...");
+    details.setText("Loading " + temp + " ...");
+    inputImg2 = loadImage(temp);
+    print(" Loaded.");
+    details.appendText(" Loaded.\n");
   }
 }
 
