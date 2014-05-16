@@ -22,53 +22,30 @@ int previous_mouseX = 0, previous_mouseY = 0;
 //Executes once at beginning, like main method
 void setup()
 {
- size(windowWidth, windowHeight);
- background(255, 255, 255);
- frameRate(24);
+  frame.setResizable(true); // Enable dynamic resizing while sketching 
+  size(windowWidth, windowHeight);
+  background(255, 255, 255);
+  frameRate(24);
+
  
-<<<<<<< HEAD
  //TODO: support more file formats.  right now it only accepts png
  inputImg1 = loadImage("inputImg1.png");
  inputImg2 = loadImage("inputImg2.png");
  //currently, program always looks in its data folder for the images.
  
+ int button_size = windowWidth/8;
+ int load_height_pos = 480;
+ 
  //show 2 load buttons that open a file explorer
- loadImage1 = new GButton(this, 50, 480, 200, 50, "Load Image 1");
- loadImage2 = new GButton(this, 50, 540, 200, 50, "Load Image 2");
- save_image = new GButton(this, 50, 600, 200, 50, "Save Image");
- ready = new GButton(this, 50, 660, 200, 50, "Display Difference");
- recenter = new GButton(this, 300, 660, 200, 50, "Recenter");
+ loadImage1 = new GButton(this, 10, load_height_pos, button_size, 50, "Select Image 1");
+ loadImage2 = new GButton(this, button_size+10, load_height_pos, button_size, 50, "Select Image 2");
+ ready = new GButton(this, 10, load_height_pos + 55, button_size*2, 50, "Display Difference");
+ save_image = new GButton(this, 10, load_height_pos + (55*2), button_size*2, 50, "Save Difference Image");
+ recenter = new GButton(this, 10, load_height_pos + (55*3), button_size*2, 50, "Reset Position of Difference Image");
  
  //Grayscale 
   grayBox = new GCheckbox(this, 50,720,200,50, "GRAYSCALE");
   grayBox.addEventHandler(this,"handleGray");
-=======
-  //TODO: support more file formats.  right now it only accepts png
-  inputImg1 = loadImage("inputImg1.png");
-  inputImg2 = loadImage("inputImg2.png");
-  //currently, program always looks in its data folder for the images.
-
-  // selectInput("Please select your first image:", "fileSelected1");
-  // selectInput("Please select your second image:", "fileSelected2");
-  
-  //show 2 load buttons that open a file explorer
-  int button_size = windowWidth/8;
-  int load_height_pos = 480;
-  loadImage1 = new GButton(this, 10, load_height_pos, button_size, 50, "Select Image 1");
-  loadImage2 = new GButton(this, button_size+10, load_height_pos, button_size, 50, "Select Image 2");
-  ready = new GButton(this, 10, load_height_pos + 55, button_size*2, 50, "Display Difference");
-  save_image = new GButton(this, 10, load_height_pos+(55*2), button_size*2, 50, "Save Difference Image");
-  recenter = new GButton(this, 10, load_height_pos+(55*3), button_size*2, 50, "Reset Position of Difference Image");
-  
-  //Grayscale 
-  grayBox = new GCheckbox(this, 50,720,200,50, "GRAYSCALE");   
-  grayBox.addEventHandler(this,"handleGray");
-   
-   //Set up our text area for output
-  details = new GTextField(this, 500, 640, 400, 30, (0x1000 | 0x0002) ); ///////////
-  gain_amount = new GTextField(this, 600, 680, 100, 30, (0x1000 | 0x0002) );
-  threshold_amount = new GTextField(this, 600, 720, 100, 30, (0x1000 | 0x0002) );
->>>>>>> f2a6e67d367c0fb91a6b7a9b84a5f4b2cc9e97b7
   
   //Set up our text area for output
  details = new GTextField(this, 600, 640, 400, 30, (0x1000 | 0x0002) );
@@ -83,26 +60,13 @@ void setup()
 //Executes continuously, is like a repeating main method
 void draw()
 {
-<<<<<<< HEAD
-=======
-
-  //frame.setsize(window_width, window_height); //command to change window size of sketch, if resizing is enabled
-  background(255, 255, 255);
-  //draw thumbnails of the input images to the left of the window
-  text("Image 1:", 10, 25);
-  text("Image 2:", 10, 60+windowHeight/4);
-  image(inputImg1, 10, 32, windowWidth/4, windowHeight/4);
-  image(inputImg2, 10, 67+windowHeight/4, windowWidth/4, windowHeight/4);
-  //TODO: fix alignment of windows to make them even, use padding so that images don't get stretched out
-
->>>>>>> f2a6e67d367c0fb91a6b7a9b84a5f4b2cc9e97b7
   
   //only needs to calculate difference when a parameter is changed, otherwise it's a waste of processing power
     if(changedParameter)//TODO: once GUI is implemented, make changedParamater = true every time a parameter is changed
     {
       
       print("Calculating difference...");
-      details.setText("Calculating difference...\n");
+      details.setText("Calculating difference...");
       textSize(28);
       float time = millis();
       
@@ -428,3 +392,11 @@ void keyPressed(){
   }
 
 }
+
+void resizeWindow(int window_width, int window_height){
+  if (windowWidth != window_width || windowHeight != window_height){
+    frame.setSize(window_width, window_height);
+  }
+  refresh = true;
+}
+
