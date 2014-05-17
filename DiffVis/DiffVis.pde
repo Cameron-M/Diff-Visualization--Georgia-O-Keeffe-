@@ -163,41 +163,91 @@ void draw()
 //Generates the output difference
 PImage getDifference(PImage input1, PImage input2)
 {
-  boolean widthIsEqual = true;
-  boolean heightIsEqual = true;
+  boolean input_width_diff = true;
+  boolean input_height_diff = true;
   int new_width = 0;
   int new_height = 0;
   diffCounter = 0;
   
   // Get size of result image, i.e. max width and max height.
-  if (input1.width < input2.width) {
-    new_width =  input2.width;
-  } else {
-    new_width = input1.width;
-  }
-  print("getDifference(): Inputs have different width, result image width set to " + new_width + "\n");
-
   if (input1.height < input2.height) {
     new_height =  input2.height;
   } else {
     new_height = input1.height;
+    if (input1.height == input2.height) input_height_diff = false;
   }
   print("getDifference(): Inputs have different heigth, result image height set to " + new_height + "\n");
 
+  if (input1.width < input2.width) {
+    new_width =  input2.width;
+    PImage temp = input1;
+    input1 = input2;
+    input2 = temp;
+  } else {
+    new_width = input1.width;
+    if (input1.width == input2.width) input_width_diff = false;
+  }
+  print("getDifference(): Inputs have different width, result image width set to " + new_width + "\n");
+
   PImage temp = createImage(new_width, new_height, RGB);
-  print("getDifference(): pixel array length: " + temp.pixels.length);
   // Start manipulating pixels in a for loop for every pixel
+  // int cursor = 0;
+  // print("input2 array max index = " + (input2.pixels.length - 1) + "\n");
+  // for (int i = 0; i < new_height; i++){
+  //   for (int q = 0; q < new_width; q++){
+  //     color input1_pixel = color(0,0,0);
+  //     color input2_pixel = color(0,0,0);
+  //     // Fetch pixel if its within bounds of picture
+  //     if (i < input1.height && q < input1.width){
+  //       if (cursor < input1.pixels.length) input1_pixel = input1.pixels[cursor];
+  //     }
+  //     if (i < input2.height && q < input2.width){
+  //       // if (cursor == input2.pixels.length-1) print("Cursor Value: " + cursor + " with i=" + i + ", q=" + q + "\n");
+  //       if (cursor < input2.pixels.length) input2_pixel = input2.pixels[cursor];
+  //     }
+  //     // Compute difference of each color
+  //     RDiff = abs(red(input1_pixel) - red(input2_pixel));
+  //     GDiff = abs(green(input1_pixel) - green(input2_pixel));
+  //     BDiff = abs(blue(input1_pixel) - blue(input2_pixel));
+      
+  //     color diffColor = color(RDiff, GDiff, BDiff);
+  //     temp.pixels[cursor] = diffColor;
+
+  //     if(round(RDiff)!=0 || round(GDiff)!=0 || round(BDiff)!=0){
+  //       //print("Difference found! RDiff=" + RDiff + " GDiff=" + GDiff + " BDiff=" + BDiff + "\n");
+  //       diffCounter++;
+  //     }
+  //     cursor++;
+  //   }
+  // }
+  boolean pixel_diff = false;
+  int i_max_row = 0;
+  int i_row = 0;
   for (int i = 0; i < temp.pixels.length; i++) {
     // If pixel array out of bound, use zero value.
     color input1_pixel = color(0,0,0);
     color input2_pixel = color(0,0,0);
-    if (i < input1.pixels.length) input1_pixel = input1.pixels[i];
-    if (i < input2.pixels.length) input2_pixel = input2.pixels[i];
+    if (i_max_row == new_width){
+      i_max_row = 0;
+    } 
+    if (i_max_row < input2.width) {
+      if (i_row < input2.pixels.length) {
+        input2_pixel = input2.pixels[i_row];
+      } else {
+        pixel_diff = true;
+      }
+      i_row++;
+    } else {
+      pixel_diff = true;
+    }
+    i_max_row++;
+    if (i < input1.pixels.length) {
+      input1_pixel = input1.pixels[i]; 
+    } else {
+      pixel_diff = true;
+    }
 
     //find difference between one pixel of each image
-    // RDiff = abs(red(input1.pixels[i]) - red(input2.pixels[i]));
-    // GDiff = abs(green(input1.pixels[i]) - green(input2.pixels[i]));
-    // BDiff = abs(blue(input1.pixels[i]) - blue(input2.pixels[i]));
     RDiff = abs(red(input1_pixel) - red(input2_pixel));
     GDiff = abs(green(input1_pixel) - green(input2_pixel));
     BDiff = abs(blue(input1_pixel) - blue(input2_pixel));
@@ -209,13 +259,15 @@ PImage getDifference(PImage input1, PImage input2)
     temp.pixels[i] = diffColor;
     
     //Difference pixel counter
-    if(RDiff!=0 || GDiff!=0 || BDiff!=0){
+    if(RDiff!=0 || GDiff!=0 || BDiff!=0 || pixel_diff){
       diffCounter ++;
     } 
   }
 
-  changedParameter = false;//make the program stop calculating difference for now
-  invoke_change = true; //account for gain and greyscale
+  // Make the program stop calculating difference for now
+  changedParameter = false;
+  // Account for gain and greyscale
+  invoke_change = true; 
   System.gc();
   return temp;
 }
