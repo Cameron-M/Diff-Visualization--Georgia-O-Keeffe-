@@ -65,7 +65,7 @@ void draw()
     if(changedParameter)//TODO: once GUI is implemented, make changedParamater = true every time a parameter is changed
     {
       
-      print("Calculating difference...");
+      print("Calculating difference..." + "\n");
       details.setText("Calculating difference...");
       textSize(28);
       float time = millis();
@@ -163,18 +163,44 @@ void draw()
 //Generates the output difference
 PImage getDifference(PImage input1, PImage input2)
 {
-  PImage temp = createImage(input1.width, input1.height, RGB);//the output will be the size of the input1 for consistency
+  boolean widthIsEqual = true;
+  boolean heightIsEqual = true;
+  int new_width = 0;
+  int new_height = 0;
   diffCounter = 0;
-  //TODO: program crashes when images sizes are different.
-  //try & catch the error (array out of bounds) and notify user.  either attempt to find difference anyway, or refuse to work with that pair
-  //if user loads inputs separately, don't diff when only one is loaded.  implement button for when user is ready
   
-  //start manipulating pixels in a for loop for every pixel
+  // Get size of result image, i.e. max width and max height.
+  if (input1.width < input2.width) {
+    new_width =  input2.width;
+  } else {
+    new_width = input1.width;
+  }
+  print("getDifference(): Inputs have different width, result image width set to " + new_width + "\n");
+
+  if (input1.height < input2.height) {
+    new_height =  input2.height;
+  } else {
+    new_height = input1.height;
+  }
+  print("getDifference(): Inputs have different heigth, result image height set to " + new_height + "\n");
+
+  PImage temp = createImage(new_width, new_height, RGB);
+  print("getDifference(): pixel array length: " + temp.pixels.length);
+  // Start manipulating pixels in a for loop for every pixel
   for (int i = 0; i < temp.pixels.length; i++) {
+    // If pixel array out of bound, use zero value.
+    color input1_pixel = color(0,0,0);
+    color input2_pixel = color(0,0,0);
+    if (i < input1.pixels.length) input1_pixel = input1.pixels[i];
+    if (i < input2.pixels.length) input2_pixel = input2.pixels[i];
+
     //find difference between one pixel of each image
-    RDiff = abs(red(input1.pixels[i]) - red(input2.pixels[i]));
-    GDiff = abs(green(input1.pixels[i]) - green(input2.pixels[i]));
-    BDiff = abs(blue(input1.pixels[i]) - blue(input2.pixels[i]));
+    // RDiff = abs(red(input1.pixels[i]) - red(input2.pixels[i]));
+    // GDiff = abs(green(input1.pixels[i]) - green(input2.pixels[i]));
+    // BDiff = abs(blue(input1.pixels[i]) - blue(input2.pixels[i]));
+    RDiff = abs(red(input1_pixel) - red(input2_pixel));
+    GDiff = abs(green(input1_pixel) - green(input2_pixel));
+    BDiff = abs(blue(input1_pixel) - blue(input2_pixel));
 
    //TODO: independent thresholds & gains to examine certain color channels more closely
    
