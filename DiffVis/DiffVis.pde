@@ -7,7 +7,7 @@ int windowWidth = 1200;//TODO: an option to change window size while running wou
 int windowHeight = 800;
 float gain = 1;// multiply by output pixels to exaggerate the differences
 int threshold = 0;
-boolean changedParameter = true, invoke_change = false, refresh = true;
+boolean changedParameter = true, invoke_change = false, refresh = true, just_started = true;
 float diffCounter = 0;
 float diffPercent;
 boolean GRAYSCALE = false;
@@ -48,12 +48,12 @@ void setup()
   grayBox.addEventHandler(this,"handleGray");
   
   //Set up our text area for output
- details = new GTextField(this, 600, 640, 400, 30, (0x1000 | 0x0002) );
+ details = new GTextField(this, 320, 610, 878, 35, (0x1000 | 0x0002) );
  gain_amount = new GTextField(this, 600, 680, 100, 30, (0x1000 | 0x0002) );
  threshold_amount = new GTextField(this, 600, 720, 100, 30, (0x1000 | 0x0002) );
  
  //Set up our scroll bars
- gain_bar = new HScrollbar(700, 700, 300, 16, 1, 800);
+ gain_bar = new HScrollbar(700, 500, 300, 16, 1, 800);
  threshold_bar = new HScrollbar(700, 740, 300, 16, 1, 700);
 }
 
@@ -85,6 +85,11 @@ void draw()
       current_zoom = 1;
       refresh = true;
     }
+
+    if(just_started){
+      details.setText("Welcome!\n");
+      just_started = false;
+    }
     
    if(refresh){
      background(255, 255, 255);
@@ -103,7 +108,7 @@ void draw()
     
     //prints diffPercent
     textSize(28);
-    text("Pixel Difference Percentage: " +diffPercent+"%",600,635);
+    text("Pixel Difference Percentage: " +diffPercent+"%",320,670);
     fill(0, 102, 153, 51);
     refresh = false;
    }
@@ -191,35 +196,6 @@ PImage getDifference(PImage input1, PImage input2)
 
   PImage temp = createImage(new_width, new_height, RGB);
   // Start manipulating pixels in a for loop for every pixel
-  // int cursor = 0;
-  // print("input2 array max index = " + (input2.pixels.length - 1) + "\n");
-  // for (int i = 0; i < new_height; i++){
-  //   for (int q = 0; q < new_width; q++){
-  //     color input1_pixel = color(0,0,0);
-  //     color input2_pixel = color(0,0,0);
-  //     // Fetch pixel if its within bounds of picture
-  //     if (i < input1.height && q < input1.width){
-  //       if (cursor < input1.pixels.length) input1_pixel = input1.pixels[cursor];
-  //     }
-  //     if (i < input2.height && q < input2.width){
-  //       // if (cursor == input2.pixels.length-1) print("Cursor Value: " + cursor + " with i=" + i + ", q=" + q + "\n");
-  //       if (cursor < input2.pixels.length) input2_pixel = input2.pixels[cursor];
-  //     }
-  //     // Compute difference of each color
-  //     RDiff = abs(red(input1_pixel) - red(input2_pixel));
-  //     GDiff = abs(green(input1_pixel) - green(input2_pixel));
-  //     BDiff = abs(blue(input1_pixel) - blue(input2_pixel));
-      
-  //     color diffColor = color(RDiff, GDiff, BDiff);
-  //     temp.pixels[cursor] = diffColor;
-
-  //     if(round(RDiff)!=0 || round(GDiff)!=0 || round(BDiff)!=0){
-  //       //print("Difference found! RDiff=" + RDiff + " GDiff=" + GDiff + " BDiff=" + BDiff + "\n");
-  //       diffCounter++;
-  //     }
-  //     cursor++;
-  //   }
-  // }
   boolean pixel_diff = false;
   int i_max_row = 0;
   int i_row = 0;
