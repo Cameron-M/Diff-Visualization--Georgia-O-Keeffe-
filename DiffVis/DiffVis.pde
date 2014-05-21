@@ -60,7 +60,7 @@ void draw()
 {
   
   //only needs to calculate difference when a parameter is changed, otherwise it's a waste of processing power
-    if(changedParameter)//TODO: once GUI is implemented, make changedParamater = true every time a parameter is changed
+    if(changedParameter)
     {
       
       print("Calculating difference..." + "\n");
@@ -281,6 +281,7 @@ void fileSelected1(File selection) {
     println(" Loaded in "  + (millis()-time)/1000 + " seconds.\n");
     details.appendText(" Loaded in " + (millis()-time)/1000 + " seconds.\n");
     refresh = true;
+    changedParameter = true;
   }
 }
 
@@ -296,6 +297,7 @@ void fileSelected2(File selection) {
     println(" Loaded in " + (millis()-time)/1000 + " seconds.\n");
     details.appendText(" Loaded in " + (millis()-time)/1000 + " seconds.\n");
     refresh = true;
+    changedParameter = true;
   }
 }
 
@@ -322,6 +324,7 @@ public void handleGray(GCheckbox grayBox,GEvent SELECTED){
   if(grayBox.isSelected() == false){
     GRAYSCALE=false;
   }
+  changedParameter = true;
 }
 
 //Copying the example on the processing website:
