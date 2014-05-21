@@ -27,8 +27,6 @@ void setup()
   background(255, 255, 255);
   frameRate(24);
 
- 
- //TODO: support more file formats.  right now it only accepts png
  inputImg1 = loadImage("inputImg1.png");
  inputImg2 = loadImage("inputImg2.png");
  //currently, program always looks in its data folder for the images.
@@ -448,3 +446,4 @@ void keyPressed(){
   }
 
 }
+
