@@ -2,6 +2,7 @@ import g4p_controls.*;
 
 PImage inputImg1;
 PImage inputImg2;
+PImage helpMenuImage;
 PImage outputImg, displayImg;
 int windowWidth = 1200;//TODO: an option to change window size while running would be nice
 int windowHeight = 800;
@@ -11,7 +12,9 @@ boolean changedParameter = true, invoke_change = false, refresh = true, just_sta
 float diffCounter = 0;
 float diffPercent;
 boolean GRAYSCALE = false;
+boolean showHelpMenu = false;
 GButton loadImage1, loadImage2, save_image, ready, recenter;
+GImageButton help_button;
 GCheckbox grayBox;
 GTextField details, gain_amount, threshold_amount;
 HScrollbar gain_bar, threshold_bar;
@@ -29,6 +32,7 @@ void setup()
 
  inputImg1 = loadImage("inputImg1.png");
  inputImg2 = loadImage("inputImg2.png");
+ helpMenuImage = loadImage("helpmenu.png");
  //currently, program always looks in its data folder for the images.
  
  int button_size = windowWidth/8;
@@ -40,6 +44,9 @@ void setup()
  ready = new GButton(this, 10, load_height_pos + 55, button_size*2, 50, "Display Difference");
  save_image = new GButton(this, 10, load_height_pos + (55*2), button_size*2, 50, "Save Difference Image");
  recenter = new GButton(this, 10, load_height_pos + (55*3), button_size*2, 50, "Reset Position of Difference Image");
+ String[] arr = {"help.png"};
+ help_button = new GImageButton(this, 1160, 752, arr);
+
  
  //Grayscale 
   grayBox = new GCheckbox(this, 50,720,200,50, "GRAYSCALE");
@@ -58,7 +65,6 @@ void setup()
 //Executes continuously, is like a repeating main method
 void draw()
 {
-  
   //only needs to calculate difference when a parameter is changed, otherwise it's a waste of processing power
     if(changedParameter)
     {
@@ -108,6 +114,9 @@ void draw()
     textSize(28);
     text("Pixel Difference Percentage: " +diffPercent+"%",320,670);
     fill(0, 102, 153, 51);
+    if (showHelpMenu) {
+      image(helpMenuImage, 0, 0);
+    }
     refresh = false;
    }
   
@@ -265,6 +274,13 @@ public void handleButtonEvents(GButton BUTTON, GEvent PRESSED)
     current_zoom = 1;
     refresh = true;
   }
+}
+
+public void handleButtonEvents(GImageButton BUTTON, GEvent PRESSED) {
+ if (BUTTON == help_button) {
+   showHelpMenu = !showHelpMenu;
+   refresh = true;
+ }
 }
 
 //Handle our file selection
@@ -428,6 +444,10 @@ void mouseWheel(MouseEvent event) {
 }
 
 void mousePressed(){
+  if ((mouseX < 400 || mouseX > 800) && (mouseY < 250 || mouseY > 550) && showHelpMenu) {
+    showHelpMenu = false;
+    refresh = true;
+  }
   previous_mouseX = mouseX;
   previous_mouseY = mouseY;
 }
