@@ -53,7 +53,7 @@ void setup()
  threshold_amount = new GTextField(this, 600, 720, 100, 30, (0x1000 | 0x0002) );
  
  //Set up our scroll bars
- gain_bar = new HScrollbar(700, 500, 300, 16, 1, 800);
+ gain_bar = new HScrollbar(700, 700, 300, 16, 1, 800);
  threshold_bar = new HScrollbar(700, 740, 300, 16, 1, 700);
 }
 
@@ -448,4 +448,3 @@ void keyPressed(){
   }
 
 }
-
