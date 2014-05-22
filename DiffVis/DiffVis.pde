@@ -21,6 +21,7 @@ HScrollbar gain_bar, threshold_bar;
 float RDiff, GDiff, BDiff, current_zoom = 1;
 int current_x = 0, current_y = 0;
 int previous_mouseX = 0, previous_mouseY = 0;
+float diff_threshold = 4.0;
 
 //Executes once at beginning, like main method
 void setup()
@@ -243,7 +244,9 @@ PImage getDifference(PImage input1, PImage input2)
     
     //Difference pixel counter
     if(RDiff!=0 || GDiff!=0 || BDiff!=0 || pixel_diff){
-      diffCounter ++;
+      float max_diff = RDiff + GDiff + BDiff;
+      if (max_diff > diff_threshold) diffCounter ++;
+      
     } 
   }
 
