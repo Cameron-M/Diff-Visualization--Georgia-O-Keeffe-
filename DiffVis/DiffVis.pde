@@ -45,7 +45,7 @@ void setup()
  save_image = new GButton(this, 10, load_height_pos + (55*2), button_size*2, 50, "Save Difference Image");
  recenter = new GButton(this, 10, load_height_pos + (55*3), button_size*2, 50, "Reset Position of Difference Image");
  String[] arr = {"help.png"};
- help_button = new GImageButton(this, 1160, 752, arr);
+ help_button = new GImageButton(this, 1173, 648, arr);
 
  
  //Grayscale 
@@ -278,8 +278,8 @@ public void handleButtonEvents(GButton BUTTON, GEvent PRESSED)
 
 public void handleButtonEvents(GImageButton BUTTON, GEvent PRESSED) {
  if (BUTTON == help_button) {
-   showHelpMenu = !showHelpMenu;
-   refresh = true;
+  showHelpMenu = !showHelpMenu;
+  refresh = true;
  }
 }
 
@@ -444,10 +444,10 @@ void mouseWheel(MouseEvent event) {
 }
 
 void mousePressed(){
-  if ((mouseX < 400 || mouseX > 800) && (mouseY < 250 || mouseY > 550) && showHelpMenu) {
-    showHelpMenu = false;
-    refresh = true;
-  }
+  // if ((mouseX < 400 || mouseX > 800) && (mouseY < 250 || mouseY > 550) && showHelpMenu) {
+  //   showHelpMenu = false;
+  //   refresh = true;
+  // }
   previous_mouseX = mouseX;
   previous_mouseY = mouseY;
 }
