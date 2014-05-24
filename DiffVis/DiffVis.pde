@@ -78,7 +78,7 @@ void setup() {
   threshold_amount = new GTextField(this, 600, 720, 100, 30, (0x1000 | 0x0002) );
  
   //Set up our scroll bars
-  gain_bar = new HScrollbar(700, 700, 300, 16, 1, 800);
+  gain_bar = new HScrollbar(700, 700, 300, 16, 1, 730);
   threshold_bar = new HScrollbar(700, 740, 300, 16, 1, 700);
 }
 
@@ -145,7 +145,7 @@ void draw() {
   threshold_bar.display();
   
   // Make Gain and threshold dynamic
-  float new_gain = gain_bar.getPos()*0.03;
+  float new_gain = gain_bar.getPos()*0.1;
   int new_threshold = (int)(threshold_bar.getPos()*2.55);
   // Only check if relevent values have changed
   if(invoke_change || new_gain != gain || new_threshold != threshold){
@@ -471,9 +471,9 @@ void mousePressed(){
 // Keyboard controls
 void keyPressed(){
   if(keyCode == 0x6B || keyCode == 0xBB){
-    if(current_zoom+0.1 <= 20) current_zoom += 0.1; refresh = true;
+    if(current_zoom+0.1 <= 20) current_zoom -= 0.1; refresh = true;
   } else if(keyCode == 0xBD || keyCode == 0x6D){
-    if(current_zoom-0.1 > 0) current_zoom -= 0.1; refresh = true;
+    if(current_zoom-0.1 > 0) current_zoom += 0.1; refresh = true;
   } else if(keyCode ==   0x26){
     current_y += 1; refresh = true;
   } else if(keyCode ==   0x27){
