@@ -1,2 +1,36 @@
-1 Page Report: https://www.mediafire.com/?hpq4bk4blk4lbvb
-Source code: DiffVis.pde
+/////////////////////////////////////////////////////////////////////
+//  DiffVis.pde
+//  UCSC CMPS119 Project - Difference Visualization for Georgia O’Keeffe
+//
+//  Coded by: 
+//  Michael Epler   (mepler@ucsc.edu)
+//  Cameron McClure   (chmcclur@ucsc.edu)
+//  Jack Rogers     (jsrogers@ucsc.edu)
+//  Paul-Valentin Mini  (pcamille@ucsc.edu)
+//  Anthony Dao   (adao1@ucsc.edu)
+//
+/////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////
+// USAGE
+/////////////////////////////////////////////////////////////////////
+OS X: Run DiffVis.app
+Windows: 
+
+Other: Run the source code using the Proccessing.app, which can be
+found at https://www.processing.org/
+
+
+/////////////////////////////////////////////////////////////////////
+// Ressources
+/////////////////////////////////////////////////////////////////////
+- 1 Page Report: https://docs.google.com/document/d/1SfrOb-C_cpL0mO6m9NF20YNbA7ZwYuBz1JZnuuYUn5Q/edit?usp=sharing
+- GitHub: https://github.com/Cameron-M/Diff-Visualization--Georgia-O-Keeffe-
+
+
+/////////////////////////////////////////////////////////////////////
+// Info
+/////////////////////////////////////////////////////////////////////
+- Source code can be found in the "DiffVis/DiffVis.pde" file.
+- Example input is located under the "DiffVis/Data" folder.
