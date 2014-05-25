@@ -15,10 +15,7 @@
 /////////////////////////////////////////////////////////////////////
 // USAGE
 /////////////////////////////////////////////////////////////////////
-OS X: Run DiffVis.app
-Windows: 
-
-Other: Run the source code using the Proccessing.app, which can be
+Run the source code using the Proccessing.app, which can be
 found at https://www.processing.org/
 
 
