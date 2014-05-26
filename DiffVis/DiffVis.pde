@@ -76,6 +76,10 @@ void setup() {
   details = new GTextField(this, 320, 610, 878, 35, (0x1000 | 0x0002) );
   gain_amount = new GTextField(this, 600, 680, 100, 30, (0x1000 | 0x0002) );
   threshold_amount = new GTextField(this, 600, 720, 100, 30, (0x1000 | 0x0002) );
+  details.addEventHandler(this, "handleMyTextFieldEvents");
+  threshold_amount.addEventHandler(this, "handleMyTextFieldEvents");
+  gain_amount.addEventHandler(this, "handleMyTextFieldEvents");
+
  
   //Set up our scroll bars
   gain_bar = new HScrollbar(700, 700, 300, 16, 1, 730);
@@ -138,10 +142,9 @@ void draw() {
     }
     refresh = false;
   }
-  
-  gain_bar.update();
+  //gain_bar.update();
+  println(gain_bar.getPos());
   gain_bar.display();
-  threshold_bar.update();
   threshold_bar.display();
   
   // Make Gain and threshold dynamic
@@ -412,6 +415,10 @@ class HScrollbar {
   float constrain(float val, float minv, float maxv) {
     return min(max(val, minv), maxv);
   }
+  
+  float constrainToBar(float val) {
+    return constrain(val, this.sposMin, this.sposMax);
+  }
 
   boolean overEvent() {
     if (mouseX > xpos && mouseX < xpos+swidth &&
@@ -437,7 +444,28 @@ class HScrollbar {
   float getPos() {
     // Convert spos to be values between
     // 0 and the total width of the scrollbar
-    return (spos - xpos)/swidth * 100;
+    return ((spos - xpos)/swidth) * 100;
+  }
+  
+  void setPos(float val) {
+    if (val > 100) val = 100;
+    if (val < 1) val = 1;
+    this.spos = (val/100) * this.swidth + this.xpos;
+  }
+}
+
+public void handleMyTextFieldEvents(GTextField textfield, GEvent event) {
+  println("textField");
+  if (event == GEvent.ENTERED || event == GEvent.CHANGED || event == GEvent.LOST_FOCUS) {
+    if (textfield == gain_amount) {
+      //println(textfield.getText().substring(5));
+      gain_bar.setPos(Float.parseFloat(textfield.getText().substring(5)) * 10);
+      gain_bar.display();
+    }
+    else if (textfield == threshold_amount) {
+      threshold_bar.setPos(Float.parseFloat(textfield.getText().substring(10))/2.55);
+      threshold_bar.display();
+    }
   }
 }
 
